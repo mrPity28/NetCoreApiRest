@@ -35,8 +35,10 @@ namespace Commander
             //fin (dbContect)
             services.AddControllers();
 
-            //injectando dependencias
-            services.AddScoped<IcommanderRepository , MockCommanderRepository>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            
+            //inyectando dependencias
+            services.AddScoped<IcommanderRepository , SqlCommanderRepository>();
 
 
 
