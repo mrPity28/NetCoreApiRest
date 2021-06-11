@@ -7,7 +7,7 @@ namespace Commander.Dtos
     //como resultado devolvera un 400
 
     //NOTA PARA MI: NUNCA RETORNES UN 500
-    public class CommandCreateDto
+    public class CommandUpdateDto 
     {
         [Required]
         [MaxLength(250)]
