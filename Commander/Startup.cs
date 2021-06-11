@@ -14,7 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-
+using Newtonsoft.Json.Serialization;
 namespace Commander
 {
     public class Startup
@@ -32,8 +32,11 @@ namespace Commander
             //servicios de bd (dbContext)
             services.AddDbContext<CommanderContext>(opt => opt.UseSqlServer
                 (Configuration.GetConnectionString("CommanderConnection")));
-            //fin (dbContect)
-            services.AddControllers();
+            //fin (dbContext)
+            
+            services.AddControllers().AddNewtonsoftJson(s => {
+                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
