@@ -10,7 +10,7 @@ namespace Commander.Data
 
         }
 
-        
         public DbSet<Command> Commands { get; set; }
+        public DbSet<User> User { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Comander.Data;
 using Commander.Data;
+using Commander.Helper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,9 @@ namespace Commander
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
             //servicios de bd (dbContext)
             services.AddDbContext<CommanderContext>(opt => opt.UseSqlServer
                 (Configuration.GetConnectionString("CommanderConnection")));
@@ -42,9 +46,8 @@ namespace Commander
             
             //inyectando dependencias
             services.AddScoped<IcommanderRepository , SqlCommanderRepository>();
-
-
-
+            services.AddScoped<IUserRepository , SqlUserRepository>();
+            
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Commander", Version = "v1" });
@@ -64,7 +67,14 @@ namespace Commander
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+             // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+            // custom jwt auth middleware
+            app.UseMiddleware<JwtMiddleware>();
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
